@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[9]:
-
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,47 +13,23 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from xgboost import XGBClassifier, plot_importance
 
-
-# In[10]:
-
-
 data = pd.read_csv('breast-cancer-wisconsin-data_data.csv')
 data.head()
-
-
-# In[11]:
-
 
 data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
 data = data.drop(columns=['id', 'Unnamed: 32'])
 data.head()
 
-
-# In[12]:
-
-
 print("Columns in DataFrame:", data.columns)
-
-
-# In[17]:
-
 
 y = data['diagnosis']
 X = data.drop("diagnosis", axis='columns')
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-
-# In[18]:
-
-
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
-
-
-# In[20]:
-
 
 k_best_selector = SelectKBest(score_func=f_classif, k=10)
 X_train_selected = k_best_selector.fit_transform(X_train_scaled, y_train)
@@ -67,10 +37,6 @@ X_test_selected = k_best_selector.transform(X_test_scaled)
 
 selected_features = X.columns[k_best_selector.get_support()]
 print("Selected Features:", selected_features.tolist())
-
-
-# In[28]:
-
 
 model_params = {
     "Random Forest": {
@@ -98,10 +64,6 @@ model_params = {
     }
 }
 
-
-# In[29]:
-
-
 results = {}
 
 for model_name, mp in model_params.items():
@@ -125,10 +87,6 @@ for model_name, mp in model_params.items():
         "Recall": recall
     }
 
-
-# In[30]:
-
-
 print("\nModel Performance Summary:")
 for model, metrics in results.items():
     print(f"{model}:")
@@ -137,4 +95,3 @@ for model, metrics in results.items():
             print(f"  {metric_name}: {metric_value}")
         else:
             print(f"  {metric_name}: {metric_value:.2f}")
-
